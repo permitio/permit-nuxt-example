@@ -1,10 +1,12 @@
 import type { AddOrderProps, Order } from '~/types';
 
 export const useOrdersStore = defineStore('orders', () => {
+  const city = useCityStore();
   const user = useUserStore();
-  const { data, refresh } = useFetch<Order[]>('/orders', {
-    headers: { user: user.current }
-  });
+  const headers = computed(() => ({
+    headers: { city: city.current, user: user.current }
+  }));
+  const { data, refresh } = useFetch<Order[]>('/orders', { ...headers.value });
   const all = computed(() => data.value ?? []);
   const toast = useToast();
   const toastError = (detail?: string) =>
@@ -17,8 +19,8 @@ export const useOrdersStore = defineStore('orders', () => {
   const add = async (props: AddOrderProps): Promise<string | null> => {
     const result = await $fetch('/orders', {
       method: 'POST',
-      headers: { user: user.current },
-      body: JSON.stringify(props)
+      body: JSON.stringify(props),
+      ...headers.value
     });
     if (result?.id) await refresh();
     return result?.id;
@@ -27,7 +29,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const fulfill = async (orderId: number): Promise<boolean> => {
     const result = await $fetch(`/order/${orderId}/fulfill`, {
       method: 'POST',
-      headers: { user: user.current }
+      ...headers.value
     });
     if (result?.success) await refresh();
     else toastError(result?.message ?? 'Error Occured');
@@ -40,8 +42,8 @@ export const useOrdersStore = defineStore('orders', () => {
   ): Promise<boolean> => {
     const result = await $fetch(`/order/${orderId}/assign-rider`, {
       method: 'POST',
-      headers: { user: user.current },
-      body: JSON.stringify({ rider })
+      body: JSON.stringify({ rider }),
+      ...headers.value
     });
     if (result?.success) await refresh();
     else toastError(result?.message ?? 'Error Occured');
@@ -51,7 +53,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const deliver = async (orderId: number): Promise<boolean> => {
     const result = await $fetch(`/order/${orderId}/deliver`, {
       method: 'POST',
-      headers: { user: user.current }
+      ...headers.value
     });
     if (result?.success) await refresh();
     else toastError(result?.message ?? 'Error Occured');

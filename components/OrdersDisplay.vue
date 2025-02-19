@@ -19,6 +19,7 @@ const toast = useToast();
 
 const displayOrderDetails = (order: Order) => ({
   'Order Time': time.display(order.orderTime),
+  'Order City': order.city,
   Customer: order.customer,
   Vendor: order.vendor,
   'Fulfilled Time': order.fulfilledTime

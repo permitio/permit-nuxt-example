@@ -20,6 +20,7 @@ export interface AddOrderProps {
 
 export interface Order {
   id: number;
+  city: string;
   meals: MealInOrder[];
   totalPrice: number;
   orderTime: string;

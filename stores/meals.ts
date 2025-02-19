@@ -1,10 +1,12 @@
 import type { AddMealProps, Meal } from '~/types';
 
 export const useMealsStore = defineStore('meals', () => {
+  const city = useCityStore();
   const user = useUserStore();
-  const { data, refresh } = useFetch<Meal[]>('/meals', {
-    headers: { user: user.current }
-  });
+  const headers = computed(() => ({
+    headers: { city: city.current, user: user.current }
+  }));
+  const { data, refresh } = useFetch<Meal[]>('/meals', { ...headers.value });
   const all = computed(() => data.value ?? []);
   const toast = useToast();
   const toastError = (detail?: string) =>
@@ -18,8 +20,8 @@ export const useMealsStore = defineStore('meals', () => {
   const add = async (props: AddMealProps): Promise<string | null> => {
     const result = await $fetch('/meals', {
       method: 'POST',
-      headers: { user: user.current },
-      body: JSON.stringify(props)
+      body: JSON.stringify(props),
+      ...headers.value
     });
     if (result?.id) await refresh();
     else toastError();
@@ -29,7 +31,7 @@ export const useMealsStore = defineStore('meals', () => {
   const remove = async (id: string): Promise<boolean> => {
     const result = await $fetch(`/meal/${id}`, {
       method: 'DELETE',
-      headers: { user: user.current }
+      ...headers.value
     });
     if (result?.success) await refresh();
     else toastError(result?.message ?? 'Error Occured');
