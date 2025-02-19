@@ -1,4 +1,4 @@
-import { saveOrders } from '../../utils/database';
+import { saveOrders } from '../../../utils/database';
 
 export default defineEventHandler(async (event) => {
   const { orderId: id, orderIndex: index, orders } = event.context;
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const { user } = event.headers as any;
+  const { user } = event.node.req.headers as any;
   if (!user) return { success: false, message: 'Unauthorized' };
   orders[index].admin = user as string;
 

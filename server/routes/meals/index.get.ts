@@ -1,3 +1,3 @@
-import { retrieveMeals } from '../utils/database';
+import { retrieveMeals } from '../../utils/database';
 
 export default defineEventHandler((_) => retrieveMeals());

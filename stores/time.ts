@@ -76,8 +76,10 @@ export const useTimeStore = defineStore('time', () => {
           interval = 60 * 60 * 1000;
         }
 
-        // Update the displayed value every interval
-        setInterval(() => (displayed.value = getDisplay(when)), interval);
+        // Update the displayed value every interval only on the client
+        if (import.meta.client) {
+          setInterval(() => (displayed.value = getDisplay(when)), interval);
+        }
       }, seconds);
     }
 

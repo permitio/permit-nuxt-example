@@ -1,7 +1,9 @@
 import { retrieveOrders } from '../../utils/database';
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
+  if (!event.path.startsWith('/order/')) return;
+
+  const id = event.path.split('/order/')[1].split('/')[0];
   if (!id || event.method !== 'POST') return;
 
   const orders = retrieveOrders();

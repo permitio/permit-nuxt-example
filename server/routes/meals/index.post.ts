@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import { retrieveMeals, saveMeals } from '../utils/database';
+import { retrieveMeals, saveMeals } from '../../utils/database';
 
 export default defineEventHandler(async (event) => {
   const { name, price, vendor } = await readBody(event);

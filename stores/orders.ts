@@ -1,7 +1,10 @@
 import type { AddOrderProps, Order } from '~/types';
 
 export const useOrdersStore = defineStore('orders', () => {
-  const { data, refresh } = useFetch<Order[]>('/orders');
+  const user = useUserStore();
+  const { data, refresh } = useFetch<Order[]>('/orders', {
+    headers: { user: user.current }
+  });
   const all = computed(() => data.value ?? []);
   const toast = useToast();
   const toastError = (detail?: string) =>
@@ -11,8 +14,6 @@ export const useOrdersStore = defineStore('orders', () => {
       summary: 'Error Occured',
       life: 5000
     });
-  const user = useUserStore();
-
   const add = async (props: AddOrderProps): Promise<string | null> => {
     const result = await $fetch('/orders', {
       method: 'POST',

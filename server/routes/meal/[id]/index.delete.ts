@@ -1,4 +1,4 @@
-import { retrieveMeals, saveMeals } from '../utils/database';
+import { retrieveMeals, saveMeals } from '../../../utils/database';
 
 export default defineEventHandler((event) => {
   const meals = retrieveMeals();

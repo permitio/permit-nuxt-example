@@ -1,7 +1,10 @@
 import type { AddMealProps, Meal } from '~/types';
 
 export const useMealsStore = defineStore('meals', () => {
-  const { data, refresh } = useFetch<Meal[]>('/meals');
+  const user = useUserStore();
+  const { data, refresh } = useFetch<Meal[]>('/meals', {
+    headers: { user: user.current }
+  });
   const all = computed(() => data.value ?? []);
   const toast = useToast();
   const toastError = (detail?: string) =>
@@ -11,7 +14,6 @@ export const useMealsStore = defineStore('meals', () => {
       summary: 'Error Occured',
       life: 5000
     });
-  const user = useUserStore();
 
   const add = async (props: AddMealProps): Promise<string | null> => {
     const result = await $fetch('/meals', {

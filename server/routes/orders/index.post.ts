@@ -1,4 +1,4 @@
-import { saveOrders } from '../utils/database';
+import { saveOrders } from '../../utils/database';
 
 export default defineEventHandler((event) => {
   const { newOrder, orders } = event.context;

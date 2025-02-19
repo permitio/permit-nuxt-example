@@ -1,4 +1,4 @@
-import { saveOrders } from '../../utils/database';
+import { saveOrders } from '../../../utils/database';
 
 export default defineEventHandler((event) => {
   const { orderId: id, orderIndex: index, orders } = event.context;
@@ -7,7 +7,7 @@ export default defineEventHandler((event) => {
     return { success: false, message: `Order ${id} already delivered!` };
   }
 
-  orders[index].fulfilledTime = new Date().toISOString();
+  orders[index].deliveredTime = new Date().toISOString();
   saveOrders(orders);
 
   return { success: true, message: `Order ${id} delivered successfully` };
