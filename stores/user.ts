@@ -1,4 +1,4 @@
-export const users = ['customer1', 'rider1', 'vendor1', 'admin1'];
+export const roles = ['customer', 'rider', 'vendor', 'admin'];
 
 export const useUserStore = defineStore('user', () => {
   const current = ref(

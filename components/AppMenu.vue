@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const city = useCityStore();
 const drawer = useDrawerStore();
-const user = useUserStore();
 </script>
 
 <template>
@@ -53,9 +52,9 @@ const user = useUserStore();
       </li>
     </ul>
   </nav>
-  <h4 class="pt-3 ml-2 mb-1 font-bold">Current User</h4>
-  <Select v-model="user.current" :options="users" class="ml-2 mb-8 w-40" />
-  <h4 class="ml-2 mb-1 font-bold">Current City</h4>
+  <h4 class="pt-3 ml-2 mb-1 font-bold">User & Role</h4>
+  <UserRoleModal />
+  <h4 class="pt-6 ml-2 mb-1 font-bold">Current City</h4>
   <Select v-model="city.current" :options="cities" class="ml-2 w-40" />
 </template>
 
