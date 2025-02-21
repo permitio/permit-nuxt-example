@@ -8,7 +8,7 @@ const isGranting = ref(false);
 const isRevoking = ref(false);
 
 const update = async (isGrant: boolean) => {
-  isGranting.value = true;
+  isGrant ? (isGranting.value = true) : (isRevoking.value = true);
   await user.updateRole({
     role: currentRole.value,
     user: user.current,
@@ -24,7 +24,7 @@ const update = async (isGrant: boolean) => {
       `tenant (city): ${city.current}`,
     life: 5000
   });
-  isGranting.value = false;
+  isGrant ? (isGranting.value = false) : (isRevoking.value = false);
   isModalVisible.value = false;
 };
 </script>
