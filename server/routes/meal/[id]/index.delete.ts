@@ -1,5 +1,3 @@
-import { retrieveMeals, saveMeals } from '../../../utils/database';
-
 export default defineEventHandler((event) => {
   const meals = retrieveMeals();
   if (meals.length == 0) return { success: true };

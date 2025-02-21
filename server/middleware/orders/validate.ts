@@ -1,5 +1,3 @@
-import { retrieveOrders } from '../../utils/database';
-
 export default defineEventHandler(async (event) => {
   if (!event.path.startsWith('/order/')) return;
 

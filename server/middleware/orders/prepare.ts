@@ -1,5 +1,4 @@
 import { MealInOrder } from '~/types';
-import { retrieveOrders } from '../../utils/database';
 
 export default defineEventHandler(async (event) => {
   if (event.path !== '/orders' || event.method !== 'POST') return;
