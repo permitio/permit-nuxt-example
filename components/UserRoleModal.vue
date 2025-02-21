@@ -1,9 +1,32 @@
 <script setup lang="ts">
+const city = useCityStore();
 const user = useUserStore();
+const toast = useToast();
 const isModalVisible = ref(false);
 const currentRole = ref(roles[0]);
 const isGranting = ref(false);
 const isRevoking = ref(false);
+
+const update = async (isGrant: boolean) => {
+  isGranting.value = true;
+  await user.updateRole({
+    role: currentRole.value,
+    user: user.current,
+    city: city.current,
+    isGrant
+  });
+  const verb = isGrant ? 'granted' : 'revoked';
+  toast.add({
+    severity: 'success',
+    summary: `Role ${verb}`,
+    detail:
+      `Role ${currentRole.value} ${verb} to user ${user.current} in ` +
+      `tenant (city): ${city.current}`,
+    life: 5000
+  });
+  isGranting.value = false;
+  isModalVisible.value = false;
+};
 </script>
 
 <template>
@@ -30,6 +53,8 @@ const isRevoking = ref(false);
         autocomplete="off"
       />
     </div>
+    <h4 class="mb-1 font-bold">Current City (Tenant for Role Assignment)</h4>
+    <Select v-model="city.current" :options="cities" class="w-40 mb-6" />
     <div class="flex flex-wrap gap-4 items-end mb-6">
       <div>
         <h4 class="mb-1 font-bold">Selected Role</h4>
@@ -41,6 +66,7 @@ const isRevoking = ref(false);
           text
           :loading="isGranting"
           :disabled="isRevoking"
+          @click="update(true)"
         />
         <Button
           label="Revoke"
@@ -48,6 +74,7 @@ const isRevoking = ref(false);
           text
           :loading="isRevoking"
           :disabled="isGranting"
+          @click="update(false)"
         />
       </div>
     </div>

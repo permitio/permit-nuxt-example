@@ -9,5 +9,10 @@ export default defineNuxtConfig({
   primevue: {
     autoImport: true,
     options: { ripple: true, theme: { preset: Aura } }
+  },
+  build: { transpile: ['permitio'] },
+  runtimeConfig: {
+    permitToken: process.env.PERMIT_TOKEN,
+    permitPdp: process.env.PERMIT_PDP
   }
 });

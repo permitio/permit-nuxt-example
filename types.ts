@@ -32,3 +32,10 @@ export interface Order {
   deliveredTime?: string;
   rider?: string;
 }
+
+export interface UpdateUserRole {
+  role: string;
+  user: string;
+  city: string;
+  isGrant: boolean;
+}

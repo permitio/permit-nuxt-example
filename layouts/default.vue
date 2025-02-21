@@ -30,7 +30,7 @@ const drawer = useDrawerStore();
     <AppMenu />
   </div>
 
-  <main class="p-4 sm:px-8 md:ml-64 md:max-w-lg">
+  <main class="p-4 sm:px-8 md:ml-64 md:max-w-2xl">
     <slot />
 
     <Toast />
