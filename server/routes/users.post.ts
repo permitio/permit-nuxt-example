@@ -3,22 +3,22 @@ export default defineEventHandler(async (event) => {
 
   // Create Tenant if it doesn't exist
   try {
-    await permit.api.getTenant(tenant);
+    await permit.api.tenants.get(tenant);
   } catch (error) {
-    await permit.api.createTenant({ key: tenant, name: tenant,  });
+    await permit.api.tenants.create({ key: tenant, name: tenant });
   }
 
   // Create User with Permit not existing
   try {
-    await permit.api.getUser(user);
+    await permit.api.users.get(user);
   } catch (error) {
-    await permit.api.createUser({ key: user, });
+    await permit.api.users.create({ key: user });
   }
 
   // Assign or Unassign Role depending on isGrant
   if (isGrant) {
-    await permit.api.assignRole({ user, role, tenant });
+    await permit.api.roleAssignments.assign({ user, role, tenant });
   } else {
-    await permit.api.unassignRole({ user, role, tenant });
+    await permit.api.roleAssignments.unassign({ user, role, tenant });
   }
 });
