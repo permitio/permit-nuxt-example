@@ -5,6 +5,8 @@ const cart = ref<MealInOrder[]>([]);
 const cartTotal = computed(() =>
   cart.value.reduce((sum, { price, quantity }) => price * quantity + sum, 0)
 );
+const deliveryFee = computed(() => (cartTotal.value >= 500 ? 0 : 50));
+const grandTotal = computed(() => cartTotal.value + deliveryFee.value);
 const isCreating = ref(false);
 const meals = useMealsStore();
 const orders = useOrdersStore();
@@ -85,10 +87,20 @@ const removeFromCart = (meal: Meal) => {
             </p>
             <span class="text-nowrap">{{ price * quantity }} 💵</span>
           </div>
+          <p class="flex items-start justify-between mb-2">
+            <span class="underline">Cart Total</span>
+            <span class="text-nowrap underline"> {{ cartTotal }} 💵 </span>
+          </p>
+          <p class="flex items-start justify-between mb-2">
+            <span>Delivery Fee</span>
+            <span class="text-nowrap">
+              {{ deliveryFee ? `${deliveryFee} 💵` : 'FREE' }}
+            </span>
+          </p>
           <p class="flex items-start justify-between mb-6">
-            <span class="font-bold">Total</span>
+            <span class="font-bold">Grand Total</span>
             <span class="text-nowrap font-bold underline">
-              {{ cartTotal }} 💵
+              {{ grandTotal }} 💵
             </span>
           </p>
         </div>

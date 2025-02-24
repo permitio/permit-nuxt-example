@@ -1,12 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const { city: tenant, user, role, isGrant } = await readBody(event);
-
-  // Create Tenant if it doesn't exist
-  try {
-    await permit.api.tenants.get(tenant);
-  } catch (error) {
-    await permit.api.tenants.create({ key: tenant, name: tenant });
-  }
+  const { user, role, isGrant } = await readBody(event);
 
   // Create User with Permit not existing
   try {
@@ -15,10 +8,11 @@ export default defineEventHandler(async (event) => {
     await permit.api.users.create({ key: user });
   }
 
-  // Assign or Unassign Role depending on isGrant
+  // Assign or Unassign Role in default tenant depending on isGrant
+  const tenant = 'default';
   if (isGrant) {
     await permit.api.roleAssignments.assign({ user, role, tenant });
   } else {
-    await permit.api.roleAssignments.unassign({ user, role, tenant });
+    await permit.api.roleAssignments.unassign({ user, role,  tenant });
   }
 });

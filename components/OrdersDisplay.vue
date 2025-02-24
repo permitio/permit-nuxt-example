@@ -19,7 +19,6 @@ const toast = useToast();
 
 const displayOrderDetails = (order: Order) => ({
   'Order Time': time.display(order.orderTime),
-  'Order City': order.city,
   Customer: order.customer,
   Vendor: order.vendor,
   'Fulfilled Time': order.fulfilledTime
@@ -84,7 +83,7 @@ const deliver = async (orderId: number) => {
       <AccordionHeader>
         <div class="grow flex justify-between mr-4">
           <h3>Order #{{ order.id }}</h3>
-          <span> {{ order.totalPrice }} 💵 </span>
+          <span> {{ order.grandTotal }} 💵 </span>
         </div>
       </AccordionHeader>
       <AccordionContent>
@@ -101,10 +100,22 @@ const deliver = async (orderId: number) => {
             </p>
             <span class="text-nowrap">{{ price * quantity }} 💵</span>
           </div>
-          <p class="flex items-start justify-between mb-2">
-            <span>Total</span>
-            <span class="text-nowrap font-bold underline">
+          <p class="flex items-start justify-between text-sm mb-1">
+            <span>Total Price</span>
+            <span class="text-nowrap underline">
               {{ order.totalPrice }} 💵
+            </span>
+          </p>
+          <p class="flex items-start justify-between text-sm mb-1">
+            <span>Delivery Fee</span>
+            <span class="text-nowrap">
+              {{ order.deliveryFee ? `${order.deliveryFee} 💵` : 'FREE' }}
+            </span>
+          </p>
+          <p class="flex items-start justify-between mb-2">
+            <span>Grand Total</span>
+            <span class="text-nowrap font-bold underline">
+              {{ order.grandTotal }} 💵
             </span>
           </p>
         </div>

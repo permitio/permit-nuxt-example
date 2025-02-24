@@ -1,6 +1,6 @@
-# Food Delivery Ecosystem with RBAC and Permit.io
+# Food Delivery Ecosystem with ABAC, ReBAC, and Permit.io
 
-This repository contains a Nuxt.js project that demonstrates how to implement Role-Based Access Control (RBAC) in a food delivery ecosystem. The project leverages [Permit.io](http://permit.io/) for managing and syncing user roles, policies, and multitenant authorization—using cities as tenants.
+This repository contains a Nuxt.js project that demonstrates how to implement Attribute-Based Access Control (ABAC) and Relationship-Based Access Control (ReBAC) in a food delivery ecosystem. The project leverages [Permit.io](http://permit.io/) for managing and syncing users and enforcing example ABAC and ReBAC policies.
 
 ## Repo Branches
 
@@ -9,25 +9,25 @@ This repo has 2 branches. The code in each branch resemble each other but are sl
 - `rbac-multitenancy`: Demonstrates Role-Based Access Control (RBAC) and Multitenancy
 - `abac-rebac`: Demonstrates Attribute-Based Access Control (ABAC) and Relationship-Based Access Control (ReBAC)
 
-You are currently in the **`rbac-multitenancy`** branch.
+You are currently in the **`abac-rebac`** branch.
 
 ## Key Features
 
-- **Role-Based Access Control (RBAC):**
+- **Attribute-Based Access Control (ABAC):**
 
-  - Define roles (customer, vendor, rider, admin) and resources (Meals, Orders) to control access.
-  - Manage permissions via Permit.io policies.
+  - Use properties of users and resources to check conditions for permissions
+  - Example of cost amount of order to make it a free delivery order.
+  - Example of number of rides by rider to make them eligible to delivery free delivery orders.
 
-- **Multitenancy:**
-
-  - Use cities as tenants to isolate data and role assignments.
-  - Ensure that users have tenant-specific roles (e.g., a rider in California vs. a rider in Washington).
+- **Relationship-Based Access Control (ReBAC):**
+  
+  - Use links or connections between users and resources for authorization
+  - Use Order#Vendor instance role to only allow relating vendors to deliver orders.
 
 - **Permit.io Integration:**
 
-  - Synchronize users and roles with Permit.io using a modal in the UI and a dedicated server endpoint.
-  - Assign roles in the context of tenants by providing the `tenant` key during API calls.
-  - Benefit from Permit.io's built-in multitenancy and policy enforcement.
+  - Synchronize users with Permit.io using a modal in the UI and a dedicated server endpoint.
+  - Benefit from Permit.io's built-in policy enforcement.
 
 - **Nuxt.js Server and Vue Frontend:**
 
@@ -49,7 +49,7 @@ You are currently in the **`rbac-multitenancy`** branch.
 
 ## Running the Project
 
-1. **Configure Permit.io in the UI Console:**
+1. **Configure RBAC in the Permit UI:**
    - Create or use a Project in https://app.permit.io for this Food Delivery repo.
    - Create 2 resources with their actions:
       - Meal: create, read, update, and delete.
@@ -58,25 +58,59 @@ You are currently in the **`rbac-multitenancy`** branch.
 
    ![](./rbac-policies.gif)
 
-2. **Clone the Repository:**
+2. **Configure ABAC in the Project:**
+   - Create numeric cost attribute on order.
+   - Create ABAC Resource Set for Orders above 500
+   - Add create-with-free-delivery action on Orders
+   
+   ![](./abac-resources.gif)
+
+   - Add numeric number_of_rides attribute on users at tenant settings page at https://app.permit.io/user-management/tenant-settings/user-attributes.
+   - Create ABAC User Set for Riders with above 500 rides
+
+   ![](./abac-users.gif)
+
+   - Update Permit policy table to allow actions on the ABAC sets
+
+   ![](./abac-policies.gif)
+
+3. **Configure ReBAC in the Project:**
+
+   - Create Vendor instance role on the Order resource
+   - Update Permit policy to allow action on instance role holders
+
+   ![](./rebac-policies.gif)
+
+4. **Clone the Repository:**
    ```bash
    git clone https://github.com/permitio/permit-nuxt-example.git
    cd permit-nuxt-example
+   git checkout abac-rebac
    ```
-3. **Install Dependencies:**
+5. **Install Dependencies:**
    ```bash
    npm install
    ```
-4. **Provide Environment Variables:**
+6. **Provide Environment Variables:**
    - Obtain a Permit token from the [project settings in the Permit Console](https://app.permit.io/settings/api-keys).
    - Create a `.env` file at the root of the project with the following:
      ```bash
      PERMIT_TOKEN=permit_key_XXXXXXXXXXXXXXXXXXXXXXXXX
-     PERMIT_PDP=https://cloudpdp.api.permit.io
+     PERMIT_PDP=http://localhost:7766
      ```
-5. **Run the Development Server:**
+7. **Start a Local PDP:**
+   - Run the following command to start up a local [PDP (Policy Decision Point)](https://docs.permit.io/concepts/pdp/overview/) for the ABAC & ReBAC rules. Put your permit token in the slated place.
+   ```bash
+   docker run -it \
+    -p 7766:7000 \
+    --env PDP_API_KEY=<your-permit-api-key> \
+    --env PDP_DEBUG=True \
+    permitio/pdp-v2:latest
+   ```
+8. **Run the Development Server:**
    ```bash
    npm run dev
    ```
-6. **Access the App:**
+9. **Access the App:**
    - Open [http://localhost:3000](http://localhost:3000) in your browser.
+   - Grant your test user the Order#Vendor resource instance role for a given Order ID in Permit UI and test allows/denys.

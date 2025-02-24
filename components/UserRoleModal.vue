@@ -1,5 +1,4 @@
 <script setup lang="ts">
-const city = useCityStore();
 const user = useUserStore();
 const toast = useToast();
 const isModalVisible = ref(false);
@@ -12,16 +11,13 @@ const update = async (isGrant: boolean) => {
   await user.updateRole({
     role: currentRole.value,
     user: user.current,
-    city: city.current,
     isGrant
   });
   const verb = isGrant ? 'granted' : 'revoked';
   toast.add({
     severity: 'success',
     summary: `Role ${verb}`,
-    detail:
-      `Role ${currentRole.value} ${verb} to user ${user.current} in ` +
-      `tenant (city): ${city.current}`,
+    detail: `Role ${currentRole.value} ${verb} to user ${user.current}`,
     life: 5000
   });
   isGrant ? (isGranting.value = false) : (isRevoking.value = false);
@@ -30,13 +26,16 @@ const update = async (isGrant: boolean) => {
 </script>
 
 <template>
-  <Button
-    label="Manage User"
-    @click="isModalVisible = !isModalVisible"
-    variant="outlined"
-    severity="contrast"
-    class="ml-2"
-  />
+  <div class="flex items-center gap-3">
+    <span class="ml-2">{{ user.current }}</span>
+    <Button
+      label="Manage"
+      @click="isModalVisible = !isModalVisible"
+      variant="outlined"
+      severity="contrast"
+      class="px-1 !py-0.5"
+    />
+  </div>
   <Dialog
     v-model:visible="isModalVisible"
     modal
@@ -53,8 +52,6 @@ const update = async (isGrant: boolean) => {
         autocomplete="off"
       />
     </div>
-    <h4 class="mb-1 font-bold">Current City (Tenant for Role Assignment)</h4>
-    <Select v-model="city.current" :options="cities" class="w-40 mb-6" />
     <div class="flex flex-wrap gap-4 items-end mb-6">
       <div>
         <h4 class="mb-1 font-bold">Selected Role</h4>

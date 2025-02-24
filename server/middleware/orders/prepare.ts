@@ -3,7 +3,6 @@ import { MealInOrder } from '~/types';
 export default defineEventHandler(async (event) => {
   if (event.path !== '/orders' || event.method !== 'POST') return;
 
-  const { city } = event.node.req.headers as any;
   const { meals, customer, vendor } = await readBody(event);
   const totalPrice = meals
     .map(({ quantity, price }: MealInOrder) => quantity * price)
@@ -16,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
   event.context.newOrder = {
     customer,
-    city,
     id,
     meals,
     orderTime,

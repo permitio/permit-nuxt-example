@@ -1,12 +1,10 @@
 import type { AddMealProps, Meal } from '~/types';
 
 export const useMealsStore = defineStore('meals', () => {
-  const city = useCityStore();
   const user = useUserStore();
-  const headers = computed(() => ({
-    headers: { city: city.current, user: user.current }
-  }));
-  const { data, refresh } = useFetch<Meal[]>('/meals', { ...headers.value });
+  const { data, refresh } = useFetch<Meal[]>('/meals', {
+    headers: { user: user.current }
+  });
   const all = computed(() => data.value ?? []);
   const toast = useToast();
   const toastError = (detail?: string) =>
@@ -21,7 +19,7 @@ export const useMealsStore = defineStore('meals', () => {
     const result = await $fetch('/meals', {
       method: 'POST',
       body: JSON.stringify(props),
-      ...headers.value
+      headers: { user: user.current }
     });
     if (result?.id) await refresh();
     else toastError();
@@ -31,7 +29,7 @@ export const useMealsStore = defineStore('meals', () => {
   const remove = async (id: string): Promise<boolean> => {
     const result = await $fetch(`/meal/${id}`, {
       method: 'DELETE',
-      ...headers.value
+      headers: { user: user.current }
     });
     if (result?.success) await refresh();
     else toastError(result?.message ?? 'Error Occured');
