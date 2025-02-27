@@ -29,9 +29,15 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  // Allow the user to read meals and others even if they are not logged in
+  if (action === 'read') return;
+
   // Check if the user is permitted carry out the action on the resource
   // that's if the user has the right role in the tenant
-  const permitted = await permit.check(user, action, resource, { tenant });
+  const permitted = await permit.check(user, action, {
+    type: resource,
+    tenant
+  });
 
   // If the user is not permitted, return an unauthorized response
   if (!permitted) {
