@@ -9,23 +9,31 @@ export default defineEventHandler(async (event) => {
   }
 
   // Get user from the request headers;
-  const { user } = event.node.req.headers as any;
+  const { user, city: tenant } = event.node.req.headers as any;
 
   // Obtain orderId from the event context
   const { orderId } = event.context;
 
-  // Check with Permit if the vendor can fulfill the order
-  const canFulfillOrder = await permit.check(
-    user,
-    'fulfill',
-    { type: 'Order', key: orderId } // providing orderId for ReBAC
-  );
+  try {
+    // Check with Permit if the vendor can fulfill the order
+    const canFulfillOrder = await permit.check(
+      user,
+      'fulfill',
+      { type: 'Order', key: orderId, tenant } // providing orderId for ReBAC
+    );
 
-  // Prevent the vendor from fulfilling the order if not authorised
-  if (!canFulfillOrder) {
+    // Prevent the vendor from fulfilling the order if not authorised
+    if (!canFulfillOrder) {
+      return {
+        success: false,
+        message: 'You are not permitted to perform this action'
+      };
+    }
+  } catch (e) {
+    console.error(e);
     return {
       success: false,
-      message: 'You are not permitted to perform this action'
+      message: 'Something went wrong'
     };
   }
 

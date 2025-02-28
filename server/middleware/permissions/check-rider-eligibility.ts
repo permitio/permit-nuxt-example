@@ -8,25 +8,33 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  // Get user from the request headers
-  const { user } = event.node.req.headers as any;
+  // Get user and tenant (city) from the request headers
+  const { user, city: tenant } = event.node.req.headers as any;
 
   // Obtain order details from the event context
-  const { orders, orderIndex } = event.context;
-  const { totalPrice } = orders[orderIndex];
+  const { orderId } = event.context;
 
-  // Check with Permit if the rider can make the delivery
-  const canRiderDeliver = await permit.check(
-    { key: user, attributes: { number_of_rides: 505 } }, // hardocded 505 for demo
-    'deliver',
-    { type: 'Order', attributes: { cost: totalPrice } }
-  );
+  try {
+    // Check with Permit if the rider is the correct one for the order
+    // and can make the delivery (if it is a free one)
+    const canRiderDeliver = await permit.check({ key: user }, 'deliver', {
+      type: 'Order',
+      key: orderId,
+      tenant
+    });
 
-  // Prevent the rider from doing the delivery if not authorised
-  if (!canRiderDeliver) {
+    // Prevent the rider from doing the delivery if not authorised
+    if (!canRiderDeliver) {
+      return {
+        success: false,
+        message: 'You are not permitted to perform this action'
+      };
+    }
+  } catch (e) {
+    console.error(e);
     return {
       success: false,
-      message: 'You are not permitted to perform this action'
+      message: 'Something went wrong'
     };
   }
 

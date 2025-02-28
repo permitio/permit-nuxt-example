@@ -1,17 +1,23 @@
 # Food Delivery Ecosystem with ABAC, ReBAC, and Permit.io
 
-This repository contains a Nuxt.js project that demonstrates how to implement Attribute-Based Access Control (ABAC) and Relationship-Based Access Control (ReBAC) in a food delivery ecosystem. The project leverages [Permit.io](http://permit.io/) for managing and syncing users and enforcing example ABAC and ReBAC policies.
+This repository contains a Nuxt.js project that demonstrates how to implement Vue/Nuxt permissions in a food delivery ecosystem. The project leverages [Permit.io](http://permit.io/) for managing and syncing users and enforcing example RBAC, ABAC, and ReBAC policies.
 
 ## Repo Branches
 
-This repo has 2 branches. The code in each branch resemble each other but are slightly modified to express the particular concept being showcased. Also, splitting them like this helps you understand what's going on in a particular concept. The repo branches are as follows:
+This repo has 3 branches. The code in each branch resemble each other but are slightly modified to express the particular concept being showcased. Also, splitting them like this helps you understand what's going on in a particular concept. The repo branches are as follows:
 
 - `rbac-multitenancy`: Demonstrates Role-Based Access Control (RBAC) and Multitenancy
 - `abac-rebac`: Demonstrates Attribute-Based Access Control (ABAC) and Relationship-Based Access Control (ReBAC)
+- `all-features`: Demonstrates all authorization models and data syncing.
 
-You are currently in the **`abac-rebac`** branch.
+You are currently in the **`all-features`** branch.
 
 ## Key Features
+
+- **Role-Based Access Control (RBAC):**
+
+  - Define roles (customer, vendor, rider, admin) and resources (Meals, Orders) to control access.
+  - Manage permissions via Permit.io policies.
 
 - **Attribute-Based Access Control (ABAC):**
 
@@ -23,6 +29,11 @@ You are currently in the **`abac-rebac`** branch.
   
   - Use links or connections between users and resources for authorization
   - Use Order#Vendor instance role to only allow relating vendors to deliver orders.
+
+- **Multitenancy:**
+
+  - Use cities as tenants to isolate data and role assignments.
+  - Ensure that users have tenant-specific roles (e.g., a rider in California vs. a rider in Washington).
 
 - **Permit.io Integration:**
 

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+const city = useCityStore();
 const user = useUserStore();
 const toast = useToast();
+const noOfRides = ref('500');
 const isModalVisible = ref(false);
 const currentRole = ref(roles[0]);
 const isGranting = ref(false);
@@ -11,16 +13,21 @@ const update = async (isGrant: boolean) => {
   await user.updateRole({
     role: currentRole.value,
     user: user.current,
-    isGrant
+    tenant: city.current,
+    isGrant,
+    ...(currentRole.value === 'rider' && { noOfRides: +noOfRides.value })
   });
   const verb = isGrant ? 'granted' : 'revoked';
   toast.add({
     severity: 'success',
     summary: `Role ${verb}`,
-    detail: `Role ${currentRole.value} ${verb} to user ${user.current}`,
+    detail:
+      `Role ${currentRole.value} ${verb} to user ${user.current} in ` +
+      `tenant (city): ${city.current}`,
     life: 5000
   });
   isGrant ? (isGranting.value = false) : (isRevoking.value = false);
+  noOfRides.value = '500';
   isModalVisible.value = false;
 };
 </script>
@@ -52,6 +59,21 @@ const update = async (isGrant: boolean) => {
         autocomplete="off"
       />
     </div>
+    <h4 class="mb-1 font-bold">City (Tenant for Role Assignment)</h4>
+    <Select v-model="city.current" :options="cities" class="w-40 mb-6" />
+    <div class="flex flex-col mb-6" v-if="currentRole === 'rider'">
+      <label for="no-of-rides" class="font-bold w-24 mb-1">No Of Rides</label>
+      <InputText
+        id="no-of-rides"
+        v-model="noOfRides"
+        class="w-48"
+        type="number"
+        min="0"
+        step="1"
+        autofocus
+        autocomplete="off"
+      />
+    </div>
     <div class="flex flex-wrap gap-4 items-end mb-6">
       <div>
         <h4 class="mb-1 font-bold">Selected Role</h4>
@@ -77,3 +99,16 @@ const update = async (isGrant: boolean) => {
     </div>
   </Dialog>
 </template>
+
+<style scoped>
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+input[type='number'] {
+  -mox-appearance: textfield;
+  appearance: textfield;
+}
+</style>

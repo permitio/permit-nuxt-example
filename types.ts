@@ -20,6 +20,7 @@ export interface AddOrderProps {
 
 export interface Order {
   id: number;
+  city: string;
   meals: MealInOrder[];
   deliveryFee: number;
   totalPrice: number;
@@ -37,5 +38,7 @@ export interface Order {
 export interface UpdateUserRole {
   role: string;
   user: string;
+  tenant: string;
   isGrant: boolean;
+  noOfRides?: number | undefined;
 }

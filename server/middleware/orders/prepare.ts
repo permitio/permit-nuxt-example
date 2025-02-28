@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
   if (event.path !== '/orders' || event.method !== 'POST') return;
 
   const { meals, customer, vendor } = await readBody(event);
+  const { city } = event.node.req.headers as any;
   const totalPrice = meals
     .map(({ quantity, price }: MealInOrder) => quantity * price)
     .reduce((sum: number, price: number) => sum + price, 0);
@@ -16,6 +17,7 @@ export default defineEventHandler(async (event) => {
   event.context.newOrder = {
     customer,
     id,
+    city,
     meals,
     orderTime,
     totalPrice,

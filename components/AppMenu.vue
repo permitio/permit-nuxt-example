@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const city = useCityStore();
 const drawer = useDrawerStore();
 </script>
 
@@ -53,6 +54,8 @@ const drawer = useDrawerStore();
   </nav>
   <h4 class="pt-3 ml-2 mb-2 font-bold underline">Current User</h4>
   <UserRoleModal />
+  <h4 class="pt-8 ml-2 mb-1 font-bold">Current City</h4>
+  <Select v-model="city.current" :options="cities" class="ml-2 w-40" />
 </template>
 
 <style scoped>
