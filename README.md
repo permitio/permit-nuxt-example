@@ -4,10 +4,11 @@ This repository contains a Nuxt.js project that demonstrates how to implement Ro
 
 ## Repo Branches
 
-This repo has 2 branches. The code in each branch resemble each other but are slightly modified to express the particular concept being showcased. Also, splitting them like this helps you understand what's going on in a particular concept. The repo branches are as follows:
+This repo has 3 branches. The code in each branch resemble each other but are slightly modified to express the particular concept being showcased. Also, splitting them like this helps you understand what's going on in a particular concept. The repo branches are as follows:
 
 - `rbac-multitenancy`: Demonstrates Role-Based Access Control (RBAC) and Multitenancy
 - `abac-rebac`: Demonstrates Attribute-Based Access Control (ABAC) and Relationship-Based Access Control (ReBAC)
+- `all-features`: Demonstrates all authorization models and data syncing.
 
 You are currently in the **`rbac-multitenancy`** branch.
 
