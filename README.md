@@ -1,4 +1,4 @@
-# Food Delivery Ecosystem with ABAC, ReBAC, and Permit.io
+# Food Delivery Ecosystem with RBAC, ABAC, ReBAC, Multitenancy, and Permit.io
 
 This repository contains a Nuxt.js project that demonstrates how to implement Vue/Nuxt permissions in a food delivery ecosystem. The project leverages [Permit.io](http://permit.io/) for managing and syncing users and enforcing example RBAC, ABAC, and ReBAC policies.
 
@@ -96,7 +96,7 @@ You are currently in the **`all-features`** branch.
    ```bash
    git clone https://github.com/permitio/permit-nuxt-example.git
    cd permit-nuxt-example
-   git checkout abac-rebac
+   git checkout all-features
    ```
 5. **Install Dependencies:**
    ```bash
