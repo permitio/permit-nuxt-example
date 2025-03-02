@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const city = useCityStore();
+const confirm = useConfirm();
 const user = useUserStore();
 const toast = useToast();
 const noOfRides = ref('500');
@@ -30,6 +31,37 @@ const update = async (isGrant: boolean) => {
   noOfRides.value = '500';
   isModalVisible.value = false;
 };
+
+const removeUser = () => {
+  confirm.require({
+    group: 'remove-user',
+    message:
+      `This will remove the current test user: ${user.current} from` +
+      ` Permit entirely with all roles, attributes, and relationships. Are` +
+      ` you sure you want to proceed?`,
+    header: 'Heads Up!',
+    rejectProps: {
+      label: 'Not yet',
+      severity: 'secondary',
+      outlined: true
+    },
+    acceptProps: {
+      label: 'Yes, go on',
+      severity: 'danger'
+    },
+    accept: async () => {
+      await user.remove();
+      toast.add({
+        severity: 'success',
+        summary: 'User Removed',
+        detail:
+          `User ${user.current} removed successfully from Permit.` +
+          `You can create by granting a role.`,
+        life: 5000
+      });
+    }
+  });
+};
 </script>
 
 <template>
@@ -42,6 +74,20 @@ const update = async (isGrant: boolean) => {
       severity="contrast"
       class="px-1 !py-0.5"
     />
+    <Button
+      severity="danger"
+      variant="text"
+      icon="pi pi-trash"
+      class="px-2 !py-0 -ml-3"
+      @click="removeUser"
+    />
+    <ConfirmDialog group="remove-user">
+      <template #message="slotProps">
+        <div class="max-w-md">
+          <p>{{ slotProps.message.message }}</p>
+        </div>
+      </template>
+    </ConfirmDialog>
   </div>
   <Dialog
     v-model:visible="isModalVisible"

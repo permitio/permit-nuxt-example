@@ -13,6 +13,14 @@ export const useUserStore = defineStore('user', () => {
     await $fetch('/users', { method: 'POST', body: JSON.stringify(props) });
   };
 
+  const remove = async () => {
+    await $fetch('/users', {
+      method: 'DELETE',
+      body: JSON.stringify({ user: current.value })
+    });
+    current.value = '';
+  };
+
   onMounted(() => {
     current.value = localStorage.getItem('fooddeliveryuser') ?? 'customer1';
     watch(
@@ -21,5 +29,5 @@ export const useUserStore = defineStore('user', () => {
     );
   });
 
-  return { current, updateRole };
+  return { current, remove, updateRole };
 });
