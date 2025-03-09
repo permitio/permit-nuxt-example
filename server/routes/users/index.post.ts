@@ -1,11 +1,11 @@
 export default defineEventHandler(async (event) => {
-  const { tenant, user, role, isGrant, noOfRoles } = await readBody(event);
+  const { tenant, user, role, isGrant, noOfRides } = await readBody(event);
 
   // Create User with Permit not existing
-  // Also sync noOfRoles attribute if provided
+  // Also sync noOfRides attribute if provided
   await permit.api.users.sync({
     key: user, 
-    ...(noOfRoles ? { attributes: { no_of_roles: noOfRoles } } : {})
+    ...(noOfRides ? { attributes: { number_of_rides: noOfRides } } : {})
   });
 
   // Assign or Unassign Role in default tenant depending on isGrant
