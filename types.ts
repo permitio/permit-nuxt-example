@@ -34,11 +34,3 @@ export interface Order {
   deliveredTime?: string;
   rider?: string;
 }
-
-export interface UpdateUserRole {
-  role: string;
-  user: string;
-  tenant: string;
-  isGrant: boolean;
-  noOfRides?: number | undefined;
-}
